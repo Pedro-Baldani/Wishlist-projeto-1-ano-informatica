@@ -112,8 +112,8 @@ def remover():
         if numeracao not in numeracoes:
             print("Opção inválida. Por favor, digite o número de um item que esteja na lista.")
             return remover()
-        confirmacao = input(f"Tem certeza que deseja remover o item {numeracao}? [s/n]: ").strip().lower()
-        if confirmacao == "s":
+        confirmacao_remover = input(f"Tem certeza que deseja remover o item {numeracao}? [s/n]: ").strip().lower()
+        if confirmacao_remover == "s":
             for i in range(len(numeracoes)):
                 if numeracoes[i] == numeracao:
                     nomes.remove(nomes[i])
@@ -123,13 +123,35 @@ def remover():
                     numeracoes.remove(numeracoes[i])
                     break
             print("Item removido com sucesso!")
-        elif confirmacao == "n":
+        elif confirmacao_remover == "n":
             print("Ação cancelada.")
             return main()
         else:
             print("Opção inválida. Por favor, digite 's' para sim ou 'n' para não.")
             print()
             return remover()
+    else:
+        print("Lista vazia. Tente adicionar um jogo primeiro!")
+
+def limpar():
+    if nomes:
+        limparlista = input("Tem certeza que deseja limpar a lista? [s/n]: ")
+        if limparlista == "s":
+            for i in range(len(numeracoes)):
+                nomes.pop()
+                precos.pop()
+                prioridades.pop()
+                comprados.pop()
+                numeracoes.pop()
+            print("Lista limpa com sucesso!")
+            return main()
+        elif limparlista == "n":
+            print("Ação cancelada.")
+            return main()
+        else:
+            print("Opção inválida. Por favor, digite 's' para sim ou 'n' para não.")
+            print()
+            return limpar()
     else:
         print("Lista vazia. Tente adicionar um jogo primeiro!")
 
@@ -171,7 +193,7 @@ def main():
                 remover()
 
             case 5:
-                pass
+                limpar()
             
             case 0:
                 pass
