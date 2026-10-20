@@ -8,11 +8,18 @@ def adicionar():
     while True:
         try:
             nome = input("Digite o nome do jogo: ").title().strip()
+            if len(nome) > 150:
+                print("Nome muito grande. Tente novamente.")
+                return adicionar()
             if not nome:
                 print("Digite um nome.")
                 print()
-                return adicionar()                
+                return adicionar()
             preco = float(input("Digite o preço do jogo: "))
+            if preco < 0:
+                print("Opção inválida. Por favor, digite um número maior do que 0.")
+                print()
+                return adicionar()
             prioridade = int(input("Qual a prioridade da compra? [1: Baixa / 2: Média / 3: Alta]: "))
         except ValueError:
             print("Opção inválida. Por favor, tente novamente.")
@@ -54,48 +61,70 @@ def atualizar():
     if nomes:
         while True:
             try:
-                numeracao = int(input("Qual o item que deseja atualizar? "))
-                if numeracao not in numeracoes:
-                    print("Opção inválida. Por favor, digite o número de um item que esteja na lista.")
-                    print()
-                    return atualizar()
-                nome2 = input("Digite o nome do jogo: ").title().strip()
-                if not nome2:
-                    print("Digite um nome.")
-                    print()
-                    return adicionar()
-                preco2 = float(input("Digite o preço do jogo: "))
-                prioridade2 = int(input("Qual a prioridade da compra? [1: Baixa / 2: Média / 3: Alta]: "))
-                if prioridade2 < 1 or prioridade2 > 3:
-                    print("Opção inválida. Por favor, digite um número de 1 a 3.")
-                    print()
-                    return adicionar()
-                comprados2 = input("O item já foi comprado? [s/n]: ").strip().lower()
+                comprou_ou_atualizar = int(input("Deseja atualizar um item ou marcar um como comprado? [1: Atualizar / 2: Marcar como comprado] "))
+                match comprou_ou_atualizar:
+                    case 1:
+                        numeracao = int(input("Qual o item que deseja atualizar? "))
+                        if numeracao not in numeracoes:
+                            print("Opção inválida. Por favor, digite o número de um item que esteja na lista.")
+                            print()
+                            return atualizar()
+                        o_que_atualizar = int(input("Qual campo deseja atualizar? [1: Nome / 2: Preço / 3: Prioridade]: "))
+                        if o_que_atualizar < 1 or o_que_atualizar > 3:
+                            print("Opção inválida. Por favor, digite um número de 1 a 3.")
+                            return atualizar()
+                        else:
+                            match o_que_atualizar:
+                                case 1:
+                                    for i in range(len(numeracoes)):
+                                        if numeracoes[i] == numeracao:
+                                            nome2 = input("Digite o nome do jogo: ").title().strip()
+                                            nomes[i] = nome2
+                                            if not nome2:
+                                                print("Digite um nome.")
+                                                print()
+                                                return atualizar()
+                                            return main()
+                                case 2:
+                                    for i in range(len(numeracoes)):
+                                        if numeracoes[i] == numeracao:
+                                            preco2 = float(input("Digite o preço do jogo: "))
+                                            precos[i] = preco2
+                                            return main()
+                                case 3:
+                                    for i in range(len(numeracoes)):
+                                        if numeracoes[i] == numeracao:
+                                            prioridade2 = int(input("Qual a prioridade da compra? [1: Baixa / 2: Média / 3: Alta]: "))
+                                            if prioridade2 < 1 or prioridade2 > 3:
+                                                print("Opção inválida. Por favor, digite um número de 1 a 3.")
+                                                print()
+                                                return atualizar()
+                                            match prioridade2:
+                                                case 1:
+                                                    prioridade2 = "Baixa"
+                                                case 2:
+                                                    prioridade2 = "Média"
+                                                case 3:
+                                                    prioridade2 = "Alta"
+                                            prioridades[i] = prioridade2
+                                            return main()
+                    case 2:
+                        for i in range(len(numeracoes)):
+                            if numeracoes[i] == numeracao:
+                                comprados2 = input("Deseja marcar o item como comprado? [s/n] ").strip().lower()
+                                if comprados2 == "s":
+                                    comprados[i] == comprados2
+                                elif comprados2 == "n":
+                                    print("Operação cancelada.")
+                                    return atualizar()
+                                else:
+                                    print("Opção inválida. Por favor, digite 's' para sim e 'n' para não.")
+                                    return atualizar()
             except ValueError:
-                print("Opção inválida. por favor, tente novamente.")
+                print("Opção inválida. Por favor, tente novamente.")
                 print()
                 continue
             break
-            
-        match prioridade2:
-            case 1:
-                prioridade2 = "Baixa"
-            case 2:
-                prioridade2 = "Média"
-            case 3:
-                prioridade2 = "Alta"
-        if comprados2 not in ["s", "n"]:
-            print("Opção inválida. por favor, digite 's' para sim ou 'n' para não.")
-            print()
-            return atualizar()
-
-        for i in range(len(numeracoes)):
-            if numeracoes[i] == numeracao:
-                nomes[i] = nome2
-                precos[i] = preco2
-                prioridades[i] = prioridade2
-                comprados[i] = comprados2 == "s"
-                break
     else:
         print("Lista vazia. Tente adicionar um jogo primeiro!")
 
@@ -163,7 +192,7 @@ def menu():
     print("2. Ver lista")
     print("3. Atualizar lista")
     print("4. Remover item")
-    print("5. Limpar lista (Em construção)")
+    print("5. Limpar lista")
     print("0. Sair (Em construção)")
     print("=" * 20)
 
